@@ -1,0 +1,161 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > InfrastructureServiceMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: InfrastructureServiceMapper (org.cityu.lmsbackend.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">InfrastructureServiceMapper</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.mapper;
+&nbsp;
+&nbsp;import org.apache.ibatis.annotations.Mapper;
+&nbsp;import org.apache.ibatis.annotations.Select;
+&nbsp;import org.cityu.lmsbackend.model.Client;
+&nbsp;import org.cityu.lmsbackend.model.Deliverer;
+&nbsp;import org.cityu.lmsbackend.model.P2PPackage;
+&nbsp;import org.cityu.lmsbackend.model.W2PPackage;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Mapper
+&nbsp;public interface InfrastructureServiceMapper {
+&nbsp;    // Account Management
+&nbsp;    @Select(&quot;SELECT password FROM fypdb.driver WHERE username=#{username}&quot;)
+&nbsp;    String selectDriverPasswordGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;DELETE FROM fypdb.driver WHERE username=#{username}&quot;)
+&nbsp;    void deleteDriverGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;DELETE FROM fypdb.client WHERE username=#{username}&quot;)
+&nbsp;    void deleteClientGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT password FROM fypdb.client WHERE username=#{username}&quot;)
+&nbsp;    String selectClientPasswordGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT password FROM fypdb.admin WHERE username=#{username}&quot;)
+&nbsp;    String selectAdminPasswordGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.driver&quot;)
+&nbsp;    List&lt;Deliverer&gt; selectAllFromDriver();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.client&quot;)
+&nbsp;    List&lt;Client&gt; selectAllFromClient();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.driver WHERE username=#{username}&quot;)
+&nbsp;    Deliverer selectDriverByName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.client WHERE username=#{username}&quot;)
+&nbsp;    Client selectClientByName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.admin LIMIT 1&quot;)
+&nbsp;    Client selectAdmin();
+&nbsp;
+&nbsp;    // Package Management
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackages();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package&quot;)
+&nbsp;    List&lt;W2PPackage&gt; selectAllW2PPackages();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE package_id=#{packageId}&quot;)
+&nbsp;    P2PPackage selectP2PPackageGivenUniquePackageId(String packageId);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package WHERE package_id=#{packageId}&quot;)
+&nbsp;    W2PPackage selectW2PPackageGivenUniquePackageId(String packageId);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE responsible_driver_name=#{username}&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackageGivenUniqueDriverUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE package_recipient_name=#{username}&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackageGivenUniqueRecipientUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE package_sender_name=#{username}&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackageGivenUniqueSenderUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package WHERE responsible_driver_name=#{username}&quot;)
+&nbsp;    List&lt;W2PPackage&gt; selectAllW2PPackageGivenUniqueDriverUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package WHERE package_recipient_name=#{username}&quot;)
+&nbsp;    List&lt;W2PPackage&gt; selectAllW2PPackageGivenUniqueRecipientUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE responsible_driver_name IS NULL&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackageWithNoDeliverer();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package WHERE responsible_driver_name IS NULL&quot;)
+&nbsp;    List&lt;W2PPackage&gt; selectAllW2PPackageWithNoDeliverer();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.p2p_package WHERE responsible_driver_name IS NOT NULL AND finished=FALSE&quot;)
+&nbsp;    List&lt;P2PPackage&gt; selectAllP2PPackageThatHasDelivererButNotFinished();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT * FROM fypdb.w2p_package WHERE responsible_driver_name IS NOT NULL AND finished=FALSE&quot;)
+&nbsp;    List&lt;W2PPackage&gt; selectAllW2PPackageThatHasDelivererButNotFinished();
+&nbsp;
+&nbsp;    @Select(&quot;SELECT coordinate FROM fypdb.points WHERE username=#{username} ORDER BY position&quot;)
+&nbsp;    List&lt;String&gt; selectPathGivenUniqueUserName(String username);
+&nbsp;
+&nbsp;    @Select(&quot;INSERT INTO fypdb.points (username, coordinate, position) VALUES (#{username}, #{coordinate}, #{index})&quot;)
+&nbsp;    void insertCoordinateInARouteGivenUniqueUserName(String username, String coordinate, int index);
+&nbsp;
+&nbsp;    @Select(&quot;DELETE FROM fypdb.points WHERE username = #{username} AND coordinate = #{coordinate}&quot;)
+&nbsp;    void deleteCoordinateInARouteGivenUniqueUserName(String username, String coordinate);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

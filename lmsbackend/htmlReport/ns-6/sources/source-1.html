@@ -1,0 +1,196 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > CommonUtils</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: CommonUtils (org.cityu.lmsbackend.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">CommonUtils</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    66.7%
+  </span>
+  <span class="absValue">
+    (2/3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    90%
+  </span>
+  <span class="absValue">
+    (18/20)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.utils;
+&nbsp;
+&nbsp;import org.cityu.lmsbackend.model.P2PPackage;
+&nbsp;import org.json.JSONException;
+&nbsp;import org.json.JSONObject;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.stereotype.Component;
+&nbsp;import org.springframework.web.client.HttpServerErrorException;
+&nbsp;import org.springframework.web.client.RestTemplate;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.List;
+&nbsp;
+<b class="nc">&nbsp;public abstract class CommonUtils {</b>
+&nbsp;    public static Double obtainDistanceGivenTwoCoordinates(String coordinateA, String coordinateB) {
+<b class="fc">&nbsp;        String LatA = coordinateA.split(&quot;,&quot;)[0];</b>
+<b class="fc">&nbsp;        String LonA = coordinateA.split(&quot;,&quot;)[1];</b>
+<b class="fc">&nbsp;        String LatB = coordinateB.split(&quot;,&quot;)[0];</b>
+<b class="fc">&nbsp;        String LonB = coordinateB.split(&quot;,&quot;)[1];</b>
+&nbsp;
+<b class="fc">&nbsp;        RestTemplate restTemplate = new RestTemplate();</b>
+&nbsp;
+<b class="fc">&nbsp;        JSONObject jsonObject = new JSONObject();</b>
+&nbsp;
+&nbsp;        try {
+<b class="fc">&nbsp;            ResponseEntity&lt;String&gt; distanceRes = restTemplate.getForEntity(</b>
+&nbsp;                    &quot;http://router.project-osrm.org/route/v1/driving/&quot; + LonA + &quot;,&quot; + LatA + &quot;;&quot; + LonB + &quot;,&quot; + LatB + &quot;?steps=false&quot;
+&nbsp;                    , String.class);
+<b class="fc">&nbsp;            if (!distanceRes.getStatusCode().is2xxSuccessful()) {</b>
+<b class="nc">&nbsp;                throw new HttpServerErrorException(distanceRes.getStatusCode());</b>
+&nbsp;            } else {
+<b class="fc">&nbsp;                jsonObject = new JSONObject(distanceRes.getBody());</b>
+&nbsp;            }
+<b class="fc">&nbsp;        } catch (Exception e) {</b>
+&nbsp;            //TODO: Use Homemade one
+<b class="fc">&nbsp;            return estimateDistanceGivenTwoCoordinates(LonA + &quot;,&quot; + LatA, LonB + &quot;,&quot; + LatB);</b>
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return Double.valueOf(jsonObject.getJSONArray(&quot;routes&quot;).getJSONObject(0).get(&quot;distance&quot;).toString());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static Double estimateDistanceGivenTwoCoordinates(String coordinateA, String coordinateB) {
+<b class="fc">&nbsp;        Double LatA = Double.valueOf(coordinateA.split(&quot;,&quot;)[0]);</b>
+<b class="fc">&nbsp;        Double LonA = Double.valueOf(coordinateA.split(&quot;,&quot;)[1]);</b>
+<b class="fc">&nbsp;        Double LatB = Double.valueOf(coordinateB.split(&quot;,&quot;)[0]);</b>
+<b class="fc">&nbsp;        Double LonB = Double.valueOf(coordinateB.split(&quot;,&quot;)[1]);</b>
+<b class="fc">&nbsp;        return Math.sqrt(Math.pow(LatA - LatB, 2) + Math.pow(LonA - LonB, 2));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;//    public static List&lt;P2PPackage&gt; wrapAllPackagesToDesignatedSizes(List&lt;P2PPackage&gt; p2PPackageList) {
+&nbsp;//        List&lt;P2PPackage&gt; newList = new ArrayList&lt;&gt;();
+&nbsp;//        for (P2PPackage pPackage : p2PPackageList) {
+&nbsp;//            Double realPackageSize = pPackage.getPackage_length() * pPackage.getPackage_width() * pPackage.getPackage_height();
+&nbsp;//            assert realPackageSize &gt; 0.0 &amp;&amp; realPackageSize &lt;= 636 * 536 * 372;
+&nbsp;//            if (realPackageSize &lt;= 192 * 142 * 84) {
+&nbsp;//                pPackage.setPackage_length(192.0);
+&nbsp;//                pPackage.setPackage_width(142.0);
+&nbsp;//                pPackage.setPackage_height(84.0);
+&nbsp;//            } else if (realPackageSize &lt;= 242 * 192 * 164) {
+&nbsp;//                pPackage.setPackage_length(242.0);
+&nbsp;//                pPackage.setPackage_width(192.0);
+&nbsp;//                pPackage.setPackage_height(164.0);
+&nbsp;//            } else if (realPackageSize &lt;= 286 * 236 * 172) {
+&nbsp;//                pPackage.setPackage_length(286.0);
+&nbsp;//                pPackage.setPackage_width(236.0);
+&nbsp;//                pPackage.setPackage_height(172.0);
+&nbsp;//            } else if (realPackageSize &lt;= 346 * 156 * 232) {
+&nbsp;//                pPackage.setPackage_length(346.0);
+&nbsp;//                pPackage.setPackage_width(156.0);
+&nbsp;//                pPackage.setPackage_height(232.0);
+&nbsp;//            } else if (realPackageSize &lt;= 346 * 286 * 222) {
+&nbsp;//                pPackage.setPackage_length(346.0);
+&nbsp;//                pPackage.setPackage_width(286.0);
+&nbsp;//                pPackage.setPackage_height(222.0);
+&nbsp;//            } else if (realPackageSize &lt;= 386 * 316 * 192) {
+&nbsp;//                pPackage.setPackage_length(386.0);
+&nbsp;//                pPackage.setPackage_width(316.0);
+&nbsp;//                pPackage.setPackage_height(192.0);
+&nbsp;//            } else if (realPackageSize &lt;= 536 * 386 * 372) {
+&nbsp;//                pPackage.setPackage_length(536.0);
+&nbsp;//                pPackage.setPackage_width(386.0);
+&nbsp;//                pPackage.setPackage_height(372.0);
+&nbsp;//            } else {
+&nbsp;//                pPackage.setPackage_length(636.0);
+&nbsp;//                pPackage.setPackage_width(536.0);
+&nbsp;//                pPackage.setPackage_height(372.0);
+&nbsp;//            }
+&nbsp;//            newList.add(pPackage);
+&nbsp;//        }
+&nbsp;//        return newList;
+&nbsp;//    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

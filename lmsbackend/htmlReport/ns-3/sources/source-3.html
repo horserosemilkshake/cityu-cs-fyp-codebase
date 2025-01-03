@@ -1,0 +1,364 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > ClientController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: ClientController (org.cityu.lmsbackend.controller)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">ClientController</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    17.9%
+  </span>
+  <span class="absValue">
+    (17/95)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">ClientController$1</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ClientController$2</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+  <tr>
+    <td class="name">ClientController$3</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/5)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (4/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    15.5%
+  </span>
+  <span class="absValue">
+    (17/110)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.controller;
+&nbsp;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import org.cityu.lmsbackend.mapper.InfrastructureServiceMapper;
+&nbsp;import org.cityu.lmsbackend.mapper.PackageAlteringMapper;
+&nbsp;import org.cityu.lmsbackend.model.Deliverer;
+&nbsp;import org.cityu.lmsbackend.model.P2PPackage;
+&nbsp;import org.cityu.lmsbackend.model.W2PPackage;
+&nbsp;import org.cityu.lmsbackend.service.ClientService;
+&nbsp;import org.cityu.lmsbackend.service.DriverService;
+&nbsp;import org.cityu.lmsbackend.utils.CommonUtils;
+&nbsp;import org.cityu.lmsbackend.utils.GetDriverInfoData;
+&nbsp;import org.cityu.lmsbackend.utils.PackageFormData;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import java.sql.Timestamp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+&nbsp;//@SaCheckRole(&quot;RECIPIENT&quot;)
+&nbsp;@RestController
+&nbsp;@CrossOrigin
+&nbsp;@RequestMapping(&quot;/api/v1/client/&quot;)
+<b class="fc">&nbsp;public class ClientController {</b>
+&nbsp;    @Autowired
+&nbsp;    private ClientService clientService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private DriverService driverService;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private InfrastructureServiceMapper infrastructureServiceMapper;
+&nbsp;
+&nbsp;    @Autowired
+&nbsp;    private PackageAlteringMapper packageAlteringMapper;
+&nbsp;
+&nbsp;    @PostMapping(&quot;package&quot;)
+&nbsp;    public List&lt;Object&gt; getAllPackagesByRecipientUserName(@RequestBody GetDriverInfoData requestData) {
+<b class="fc">&nbsp;        String userName = requestData.getUsername();</b>
+<b class="fc">&nbsp;        List&lt;Object&gt; listOfPackage = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        listOfPackage.addAll(clientService.getAllP2PPackageByRecipientUserName(userName));</b>
+<b class="fc">&nbsp;        listOfPackage.addAll(clientService.getAllW2PPackageByRecipientUserName(userName));</b>
+<b class="fc">&nbsp;        return listOfPackage;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;package&quot;)
+&nbsp;    public HttpStatus addP2PPackage(@RequestBody PackageFormData requestData) {
+&nbsp;        try {
+<b class="nc">&nbsp;            if (requestData.getPackageLength() &lt; 0 || requestData.getPackageWidth() &lt; 0 || requestData.getPackageHeight() &lt; 0 || requestData.getPackageWeight() &lt; 0) {</b>
+<b class="nc">&nbsp;                throw new IllegalStateException(&quot;Invalid dimensions&quot;);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (requestData.getWarehousePresent() != 0 &amp;&amp; requestData.getWarehousePresent() != 1) {</b>
+<b class="nc">&nbsp;                throw new IllegalStateException(&quot;Invalid warehouse state&quot;);</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            if (requestData.getWarehousePresent() == 1) {</b>
+<b class="nc">&nbsp;                requestData.setPackageDescription(requestData.getPackageDescription().replaceAll(&quot;[&#39;\&quot;\\\\]&quot;, &quot;\\\\$0&quot;));</b>
+<b class="nc">&nbsp;                W2PPackage foo = new W2PPackage(</b>
+&nbsp;                        &quot;&quot;,
+<b class="nc">&nbsp;                        requestData.getPackageId(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageDescription(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageWeight(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageHeight(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageLength(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageWidth(),</b>
+<b class="nc">&nbsp;                        requestData.getRecipientName(),</b>
+<b class="nc">&nbsp;                        requestData.getPickupLocation(),</b>
+<b class="nc">&nbsp;                        requestData.getPickupCoordinate(),</b>
+<b class="nc">&nbsp;                        requestData.getDestination(),</b>
+<b class="nc">&nbsp;                        requestData.getDestinationCoordinate(),</b>
+<b class="nc">&nbsp;                        false,</b>
+&nbsp;                        null,
+<b class="nc">&nbsp;                        requestData.getDeadline(),</b>
+<b class="nc">&nbsp;                        new Timestamp(System.currentTimeMillis())</b>
+&nbsp;                );
+<b class="nc">&nbsp;                packageAlteringMapper.insertW2PPackage(foo);</b>
+<b class="nc">&nbsp;            } else {</b>
+<b class="nc">&nbsp;                requestData.setPackageDescription(requestData.getPackageDescription().replaceAll(&quot;[&#39;\&quot;\\\\]&quot;, &quot;\\\\$0&quot;));</b>
+<b class="nc">&nbsp;                P2PPackage foo = new P2PPackage(</b>
+&nbsp;                        &quot;&quot;,
+<b class="nc">&nbsp;                        requestData.getPackageId(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageDescription(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageWeight(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageHeight(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageLength(),</b>
+<b class="nc">&nbsp;                        requestData.getPackageWidth(),</b>
+<b class="nc">&nbsp;                        requestData.getSenderName(),</b>
+<b class="nc">&nbsp;                        requestData.getRecipientName(),</b>
+<b class="nc">&nbsp;                        requestData.getPickupLocation(),</b>
+<b class="nc">&nbsp;                        requestData.getPickupCoordinate(),</b>
+<b class="nc">&nbsp;                        requestData.getDestination(),</b>
+<b class="nc">&nbsp;                        requestData.getDestinationCoordinate(),</b>
+<b class="nc">&nbsp;                        false,</b>
+&nbsp;                        null,
+<b class="nc">&nbsp;                        requestData.getDeadline(),</b>
+<b class="nc">&nbsp;                        new Timestamp(System.currentTimeMillis())</b>
+&nbsp;                );
+<b class="nc">&nbsp;                packageAlteringMapper.insertP2PPackage(foo);</b>
+&nbsp;            }
+<b class="nc">&nbsp;        } catch (Exception e) {</b>
+<b class="nc">&nbsp;            return HttpStatus.CONFLICT;</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return HttpStatus.ACCEPTED;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;user-info&quot;)
+&nbsp;    public synchronized String parseUserInfo(@RequestBody GetDriverInfoData requestData) throws JsonProcessingException {
+<b class="fc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="fc">&nbsp;        return clientService.getClientByUserName(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;get-all-responsible-drivers-info-by-recipient-username&quot;)
+&nbsp;    public Map&lt;String, Map&lt;String, String&gt;&gt; getAllResponsibleDriversInfoByRecipientUserName(@RequestBody GetDriverInfoData requestData) {
+<b class="fc">&nbsp;        String userName = requestData.getUsername();</b>
+<b class="fc">&nbsp;        Map&lt;String, Map&lt;String, String&gt;&gt; query = new HashMap&lt;&gt;();</b>
+&nbsp;
+<b class="fc">&nbsp;        for (P2PPackage p : clientService.getAllP2PPackageByRecipientUserName(userName)) {</b>
+<b class="fc">&nbsp;            if (p.getResponsible_driver_name() == null) {</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            Deliverer driver = clientService.getResponsibleDelivererByDelivererUserName(p.getResponsible_driver_name());</b>
+<b class="nc">&nbsp;            if (driver == null) {</b>
+<b class="nc">&nbsp;                query.put(&quot;No Driver Yet&quot;, new HashMap&lt;String, String&gt;() {{</b>
+<b class="nc">&nbsp;                    put(&quot;coordinate&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;                    put(&quot;route&quot;, &quot;&quot;);</b>
+<b class="nc">&nbsp;                    put(&quot;speed&quot;, &quot;0&quot;);</b>
+<b class="nc">&nbsp;                    put(&quot;distance&quot;, &quot;0&quot;);</b>
+&nbsp;                }});
+<b class="nc">&nbsp;                return query;</b>
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            List&lt;String&gt; driverPath = infrastructureServiceMapper.selectPathGivenUniqueUserName(driver.getUsername());</b>
+<b class="nc">&nbsp;            String delivererCurrentCoordinate = driver.getCurrent_coordinate();</b>
+<b class="nc">&nbsp;            driverPath.add(0, delivererCurrentCoordinate);</b>
+<b class="nc">&nbsp;            String deliveryLocation = p.getPackage_destination_coordinate();</b>
+&nbsp;
+<b class="nc">&nbsp;            int counter = 0;</b>
+<b class="nc">&nbsp;            double distance = 0;</b>
+<b class="nc">&nbsp;            if (driverPath.size() == 1) {</b>
+<b class="nc">&nbsp;                distance = -CommonUtils.obtainDistanceGivenTwoCoordinates(driverPath.get(0), deliveryLocation);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                System.out.println(driverPath.size());</b>
+<b class="nc">&nbsp;                for (int i = 0; i &lt; driverPath.size() - 1; i++) {</b>
+<b class="nc">&nbsp;                    distance += CommonUtils.obtainDistanceGivenTwoCoordinates(driverPath.get(i), driverPath.get(i + 1));</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            double finalDistance = distance;</b>
+&nbsp;
+<b class="nc">&nbsp;            query.put(driver.getUsername(), new HashMap&lt;String, String&gt;() {{</b>
+<b class="nc">&nbsp;                put(&quot;coordinate&quot;, driver.getCurrent_coordinate());</b>
+<b class="nc">&nbsp;                put(&quot;route&quot;, driverPath.toString());</b>
+<b class="nc">&nbsp;                put(&quot;speed&quot;, driver.getSpeed().toString());</b>
+<b class="nc">&nbsp;                put(&quot;distance&quot;, String.valueOf(finalDistance));</b>
+&nbsp;            }});
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        for (W2PPackage p : clientService.getAllW2PPackageByRecipientUserName(userName)) {</b>
+<b class="fc">&nbsp;            if (p.getResponsible_driver_name() == null) {</b>
+<b class="fc">&nbsp;                continue;</b>
+&nbsp;            }
+<b class="nc">&nbsp;            Deliverer driver = clientService.getResponsibleDelivererByDelivererUserName(p.getResponsible_driver_name());</b>
+&nbsp;
+<b class="nc">&nbsp;            List&lt;String&gt; driverPath = infrastructureServiceMapper.selectPathGivenUniqueUserName(driver.getUsername());</b>
+<b class="nc">&nbsp;            String delivererCurrentCoordinate = driver.getCurrent_coordinate();</b>
+<b class="nc">&nbsp;            driverPath.add(0, delivererCurrentCoordinate);</b>
+<b class="nc">&nbsp;            String deliveryLocation = p.getPackage_destination_coordinate();</b>
+&nbsp;
+<b class="nc">&nbsp;            int counter = 0;</b>
+<b class="nc">&nbsp;            double distance = 0;</b>
+<b class="nc">&nbsp;            if (driverPath.size() == 1) {</b>
+<b class="nc">&nbsp;                distance = -CommonUtils.obtainDistanceGivenTwoCoordinates(driverPath.get(0), deliveryLocation);</b>
+&nbsp;            } else {
+<b class="nc">&nbsp;                System.out.println(driverPath.size());</b>
+<b class="nc">&nbsp;                for (int i = 0; i &lt; driverPath.size() - 1; i++) {</b>
+<b class="nc">&nbsp;                    distance += CommonUtils.obtainDistanceGivenTwoCoordinates(driverPath.get(i), driverPath.get(i + 1));</b>
+&nbsp;                }
+&nbsp;            }
+&nbsp;
+<b class="nc">&nbsp;            double finalDistance = distance;</b>
+<b class="nc">&nbsp;            query.put(driver.getUsername(), new HashMap&lt;String, String&gt;() {{</b>
+<b class="nc">&nbsp;                put(&quot;coordinate&quot;, driver.getCurrent_coordinate());</b>
+<b class="nc">&nbsp;                put(&quot;route&quot;, driverPath.toString());</b>
+<b class="nc">&nbsp;                put(&quot;speed&quot;, driver.getSpeed().toString());</b>
+<b class="nc">&nbsp;                put(&quot;distance&quot;, String.valueOf(finalDistance));</b>
+&nbsp;            }});
+<b class="nc">&nbsp;        }</b>
+&nbsp;
+<b class="fc">&nbsp;        return query;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

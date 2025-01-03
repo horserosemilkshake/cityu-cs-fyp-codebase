@@ -1,0 +1,31 @@
+.scrollable-list {
+    max-height: 200px;
+    width: 100%;
+    /* overflow-y: auto; */
+  }
+  
+  .scrollable-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 2%;
+  }
+  
+  .scrollable-list li {
+    padding: 10px;
+    width: 100%;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .scrollable-list li:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .scrollable-list li a {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .scrollable-list li a:hover {
+    text-decoration: underline;
+  }

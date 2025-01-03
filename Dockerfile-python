@@ -1,0 +1,16 @@
+# Use a base image with Python 3.9
+FROM python:3.9
+
+# Copy the project files to the container
+COPY ./lmsextservice /app
+
+# Set the working directory to the app directory
+WORKDIR /app
+
+# Install the Python dependencies
+RUN pip install -r requirements.txt
+
+RUN pip install opencv-python-headless
+
+# Set the command to run the Python service
+CMD ["python", "main.py"]

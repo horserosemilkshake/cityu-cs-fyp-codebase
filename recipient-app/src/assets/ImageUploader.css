@@ -1,0 +1,31 @@
+.image-uploader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.image-uploader h2 {
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.image-uploader .upload-buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.image-uploader .image-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+}
+
+.image-uploader .image-container img {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+}

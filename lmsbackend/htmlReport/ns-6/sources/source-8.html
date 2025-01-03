@@ -1,0 +1,227 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > KMeansClustering</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.utils</a>
+</div>
+
+<h1>Coverage Summary for Class: KMeansClustering (org.cityu.lmsbackend.utils)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">KMeansClustering</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (4/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    96.8%
+  </span>
+  <span class="absValue">
+    (60/62)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.utils;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.HashMap;
+&nbsp;import java.util.List;
+&nbsp;import java.util.Map;
+&nbsp;
+<b class="nc">&nbsp;public class KMeansClustering {</b>
+&nbsp;    public static List&lt;List&lt;String&gt;&gt; kMeans(List&lt;String&gt; points, int numClusters) {
+<b class="fc">&nbsp;        List&lt;List&lt;String&gt;&gt; clusters = new ArrayList&lt;&gt;();</b>
+&nbsp;
+&nbsp;        // Initialize centroids
+<b class="fc">&nbsp;        System.out.print(points);</b>
+<b class="fc">&nbsp;        if (points.isEmpty()) {</b>
+<b class="nc">&nbsp;            return clusters;</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        List&lt;String&gt; centroids = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; numClusters; i++) {</b>
+<b class="fc">&nbsp;            centroids.add(points.get(i));</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Assign points to clusters
+<b class="fc">&nbsp;        Map&lt;String, List&lt;String&gt;&gt; assignment = new HashMap&lt;&gt;();</b>
+<b class="fc">&nbsp;        for (int i = 0; i &lt; points.size(); i++) {</b>
+<b class="fc">&nbsp;            String point = points.get(i);</b>
+<b class="fc">&nbsp;            String centroid = findNearestCentroid(point, centroids);</b>
+<b class="fc">&nbsp;            if (!assignment.containsKey(centroid)) {</b>
+<b class="fc">&nbsp;                assignment.put(centroid, new ArrayList&lt;&gt;());</b>
+&nbsp;            }
+<b class="fc">&nbsp;            assignment.get(centroid).add(point);</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Update centroids
+&nbsp;        while (true) {
+<b class="fc">&nbsp;            List&lt;String&gt; newCentroids = new ArrayList&lt;&gt;();</b>
+<b class="fc">&nbsp;            for (String centroid : assignment.keySet()) {</b>
+<b class="fc">&nbsp;                List&lt;String&gt; clusterPoints = assignment.get(centroid);</b>
+<b class="fc">&nbsp;                String newCentroid = calculateCentroid(clusterPoints);</b>
+<b class="fc">&nbsp;                newCentroids.add(newCentroid);</b>
+<b class="fc">&nbsp;            }</b>
+&nbsp;
+<b class="fc">&nbsp;            if (newCentroids.equals(centroids)) {</b>
+<b class="fc">&nbsp;                break;</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            centroids = newCentroids;</b>
+&nbsp;
+&nbsp;            // Reassign points to clusters
+<b class="fc">&nbsp;            assignment.clear();</b>
+<b class="fc">&nbsp;            for (int i = 0; i &lt; points.size(); i++) {</b>
+<b class="fc">&nbsp;                String point = points.get(i);</b>
+<b class="fc">&nbsp;                String centroid = findNearestCentroid(point, centroids);</b>
+<b class="fc">&nbsp;                if (!assignment.containsKey(centroid)) {</b>
+<b class="fc">&nbsp;                    assignment.put(centroid, new ArrayList&lt;&gt;());</b>
+&nbsp;                }
+<b class="fc">&nbsp;                assignment.get(centroid).add(point);</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+&nbsp;
+&nbsp;        // Collect final clusters
+<b class="fc">&nbsp;        clusters.addAll(assignment.values());</b>
+&nbsp;
+<b class="fc">&nbsp;        return clusters;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String findNearestCentroid(String point, List&lt;String&gt; centroids) {
+<b class="fc">&nbsp;        double minDistance = Double.MAX_VALUE;</b>
+<b class="fc">&nbsp;        String nearestCentroid = null;</b>
+<b class="fc">&nbsp;        for (String centroid : centroids) {</b>
+<b class="fc">&nbsp;            double distance = calculateEuclideanDistance(point, centroid);</b>
+<b class="fc">&nbsp;            if (distance &lt; minDistance) {</b>
+<b class="fc">&nbsp;                minDistance = distance;</b>
+<b class="fc">&nbsp;                nearestCentroid = centroid;</b>
+&nbsp;            }
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return nearestCentroid;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static double calculateEuclideanDistance(String point1, String point2) {
+<b class="fc">&nbsp;        String[] coordinates1 = point1.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;        String[] coordinates2 = point2.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;        double x1 = Double.parseDouble(coordinates1[0]);</b>
+<b class="fc">&nbsp;        double y1 = Double.parseDouble(coordinates1[1]);</b>
+<b class="fc">&nbsp;        double x2 = Double.parseDouble(coordinates2[0]);</b>
+<b class="fc">&nbsp;        double y2 = Double.parseDouble(coordinates2[1]);</b>
+<b class="fc">&nbsp;        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public static String calculateCentroid(List&lt;String&gt; points) {
+<b class="fc">&nbsp;        double sumX = 0;</b>
+<b class="fc">&nbsp;        double sumY = 0;</b>
+<b class="fc">&nbsp;        for (String point : points) {</b>
+<b class="fc">&nbsp;            String[] coordinates = point.split(&quot;,&quot;);</b>
+<b class="fc">&nbsp;            double x = Double.parseDouble(coordinates[0]);</b>
+<b class="fc">&nbsp;            double y = Double.parseDouble(coordinates[1]);</b>
+<b class="fc">&nbsp;            sumX += x;</b>
+<b class="fc">&nbsp;            sumY += y;</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        double centroidX = sumX / points.size();</b>
+<b class="fc">&nbsp;        double centroidY = sumY / points.size();</b>
+<b class="fc">&nbsp;        return centroidX + &quot;,&quot; + centroidY;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;//    public static void main(String[] args) {
+&nbsp;//        // Example usage
+&nbsp;//        List&lt;String&gt; points = new ArrayList&lt;&gt;();
+&nbsp;//        points.add(&quot;1,1&quot;);
+&nbsp;//        points.add(&quot;1,2&quot;);
+&nbsp;//        points.add(&quot;2,2&quot;);
+&nbsp;//        points.add(&quot;5,5&quot;);
+&nbsp;//        points.add(&quot;6,6&quot;);
+&nbsp;//        points.add(&quot;7,7&quot;);
+&nbsp;//        int numClusters = 2;
+&nbsp;//
+&nbsp;//        List&lt;List&lt;String&gt;&gt; clusters = kMeans(points, numClusters);
+&nbsp;//        for (int i = 0; i &lt; clusters.size(); i++) {
+&nbsp;//            System.out.println(&quot;Cluster &quot; + (i + 1) + &quot;: &quot; + clusters.get(i));
+&nbsp;//            String centroid = calculateCentroid(clusters.get(i));
+&nbsp;//            System.out.println(&quot;Centroid: &quot; + centroid);
+&nbsp;//        }
+&nbsp;//    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

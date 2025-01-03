@@ -1,0 +1,8 @@
+# Use a base image with Java 20
+FROM openjdk:20
+
+# Copy the JAR file to the container
+COPY target/*.jar app.jar
+
+# Set the entrypoint to run the SpringBoot application
+ENTRYPOINT ["java", "-jar", "/app.jar"]

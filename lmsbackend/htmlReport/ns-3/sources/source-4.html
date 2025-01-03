@@ -1,0 +1,229 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > DriverController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: DriverController (org.cityu.lmsbackend.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DriverController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    30%
+  </span>
+  <span class="absValue">
+    (3/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    12.2%
+  </span>
+  <span class="absValue">
+    (5/41)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.controller;
+&nbsp;
+&nbsp;import java.util.ArrayList;
+&nbsp;import java.util.Arrays;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;import cn.dev33.satoken.util.SaResult;
+&nbsp;import com.fasterxml.jackson.core.JsonProcessingException;
+&nbsp;import com.fasterxml.jackson.databind.ObjectMapper;
+&nbsp;import org.cityu.lmsbackend.mapper.InfrastructureServiceMapper;
+&nbsp;import org.cityu.lmsbackend.model.P2PPackage;
+&nbsp;import org.cityu.lmsbackend.service.DriverService;
+&nbsp;import org.cityu.lmsbackend.utils.*;
+&nbsp;import org.jetbrains.annotations.NotNull;
+&nbsp;import org.json.JSONArray;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.data.annotation.Persistent;
+&nbsp;import org.springframework.http.HttpStatus;
+&nbsp;import org.springframework.http.ResponseEntity;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import cn.dev33.satoken.annotation.SaCheckRole;
+&nbsp;
+&nbsp;//@SaCheckRole(&quot;DRIVER&quot;)
+&nbsp;@RestController
+&nbsp;@CrossOrigin
+&nbsp;@RequestMapping(&quot;/api/v1/driver/&quot;)
+<b class="fc">&nbsp;public class DriverController {</b>
+&nbsp;    @Autowired
+&nbsp;    private DriverService driverService;
+&nbsp;
+&nbsp;    @PostMapping(&quot;package&quot;)
+&nbsp;    public synchronized String parseGetUndeliveredPackage(@RequestBody PackageGetRequestData requestData) throws JsonProcessingException {
+<b class="fc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="fc">&nbsp;        int warehouse = requestData.getWarehouse();</b>
+<b class="fc">&nbsp;        return getUndeliveredPackage(username, warehouse);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;user-info&quot;)
+&nbsp;    public synchronized String parseUserInfo(@RequestBody GetDriverInfoData requestData) throws JsonProcessingException {
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        return driverService.getDriver(username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;update-position&quot;)
+&nbsp;    public HttpStatus updatePosition(@RequestBody GetDriverPositionInfoData requestData) throws JsonProcessingException {
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        String currentCoordinate = requestData.getCurrentCoordinate();</b>
+<b class="nc">&nbsp;        String lastCoordinate = requestData.getLastCoordinate();</b>
+<b class="nc">&nbsp;        Double updateTimeInterval = requestData.getUpdateTimeInterval();</b>
+<b class="nc">&nbsp;        return updatePosition(username, currentCoordinate, lastCoordinate, updateTimeInterval);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public HttpStatus updatePosition(String username, String currentCoordinate, String lastCoordinate, Double updateTimeInterval) {
+<b class="nc">&nbsp;        System.out.println(&quot;updatePosition invoked.&quot;);</b>
+<b class="nc">&nbsp;        driverService.updatePosition(username, currentCoordinate, lastCoordinate, updateTimeInterval);</b>
+<b class="nc">&nbsp;        return HttpStatus.ACCEPTED;</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;
+&nbsp;    public synchronized String getUndeliveredPackage(
+&nbsp;            @RequestParam(name = &quot;username&quot;) String username,
+&nbsp;            @RequestParam(name = &quot;warehouse&quot;) int warehousePresent) throws JsonProcessingException { // 0 - p2p delivery, not 0 - w2p delivery
+<b class="fc">&nbsp;    	return driverService.getPackage(username, warehousePresent);	</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PutMapping(&quot;package&quot;)
+&nbsp;    public synchronized ResponseEntity&lt;String&gt; occupyPackage(@RequestBody GetDriverSelectedPackageData requestData) throws JsonProcessingException {
+<b class="nc">&nbsp;        System.out.println(&quot;occupyPackage invoked.&quot;);</b>
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        List&lt;String&gt; packageIds = requestData.getPackageIds();</b>
+<b class="nc">&nbsp;        int warehousePresent = requestData.getWarehousePresent();</b>
+<b class="nc">&nbsp;        System.out.println(username);</b>
+<b class="nc">&nbsp;        System.out.println(packageIds);</b>
+<b class="nc">&nbsp;        System.out.println(warehousePresent);</b>
+<b class="nc">&nbsp;        ResponseEntity&lt;String&gt; output = driverService.occupyPackage(username, packageIds, warehousePresent);</b>
+<b class="nc">&nbsp;        System.out.println(output.toString());</b>
+<b class="nc">&nbsp;        return output;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;package&quot;)
+&nbsp;    public synchronized HttpStatus releasePackage(@RequestBody GetDriverReleasePackageData requestData) throws JsonProcessingException {
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        String packageId = requestData.getPackageId();</b>
+<b class="nc">&nbsp;        int warehousePresent = requestData.getWarehousePresent();</b>
+<b class="nc">&nbsp;        return driverService.releasePackage(username, packageId, warehousePresent);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @PostMapping(&quot;path&quot;)
+&nbsp;    public synchronized HttpStatus setPath(@RequestBody GetDriverPath requestData){
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        List&lt;String&gt; path = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (List&lt;Double&gt; foo : requestData.getPath()) {</b>
+<b class="nc">&nbsp;            path.add(String.valueOf(foo.get(0)) + &quot;,&quot; + String.valueOf(foo.get(1)));</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return driverService.setPath(username, path);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;path&quot;)
+&nbsp;    public synchronized HttpStatus releasePath(@RequestBody GetDriverPath requestData){
+<b class="nc">&nbsp;        String username = requestData.getUsername();</b>
+<b class="nc">&nbsp;        List&lt;String&gt; path = new ArrayList&lt;&gt;();</b>
+<b class="nc">&nbsp;        for (List&lt;Double&gt; foo : requestData.getPath()) {</b>
+<b class="nc">&nbsp;            path.add(String.valueOf(foo.get(0)) + &quot;,&quot; + String.valueOf(foo.get(1)));</b>
+<b class="nc">&nbsp;        }</b>
+<b class="nc">&nbsp;        return driverService.releaseLocation(username, path);</b>
+&nbsp;    }
+&nbsp;//    @PutMapping(&quot;package&quot;)
+&nbsp;//    public synchronized HttpStatus occupyPackage(
+&nbsp;//            @RequestParam(name = &quot;username&quot;) String username,
+&nbsp;//            @RequestParam(name = &quot;packages&quot;) List&lt;String&gt; packageIds,
+&nbsp;//            @RequestParam(name = &quot;warehouse&quot;) int warehousePresent) { // 0 - p2p delivery, not 0 - w2p delivery
+&nbsp;//    	return driverService.occupyPackage(username, packageIds, warehousePresent);
+&nbsp;//    }
+&nbsp;    
+&nbsp;//    @DeleteMapping(&quot;package&quot;)
+&nbsp;//    public synchronized HttpStatus releasePackage(
+&nbsp;//            @RequestParam(name = &quot;username&quot;) String username,
+&nbsp;//            @RequestParam(name = &quot;packages&quot;) String packageIds,
+&nbsp;//            @RequestParam(name = &quot;warehouse&quot;) int warehousePresent) { // 0 - p2p delivery, not 0 - w2p delivery
+&nbsp;//    	return driverService.releasePackage(username, packageIds, warehousePresent);
+&nbsp;//    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

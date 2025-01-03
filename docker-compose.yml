@@ -1,0 +1,44 @@
+version: "3.7"
+services:
+  api_service:
+    build: 
+      context: .
+      dockerfile: Dockerfile-springboot
+    restart: always
+    ports:
+      - 8080:8080
+      - 3306:3306
+    networks:
+      - springapimysql-net
+    environment:
+      - spring.datasource.url=jdbc:mysql://rm-3ns7zahy68883on2yoo.mysql.rds.aliyuncs.com:3306/fypdb?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&allowPublicKeyRetrieval=true&useSSL=false
+      - spring.datasource.username=gedued1963
+      - spring.datasource.password=u(a)p$$J99BjzFN
+      - spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+      - spring.jackson.date-format=yyyy-MM-dd HH:mm:ss
+    
+    volumes:
+      - .m2:/root/.m2
+
+  ext_service:
+    build:
+      context: .
+      dockerfile: Dockerfile-python
+    restart: always
+    depends_on:
+      - osrm
+    ports:
+      - 1234:1234
+  
+  osrm:
+    container_name: osrm
+    image: osrm/osrm-backend
+    restart: always
+    ports:
+      - 5000:5000
+    volumes:
+      - ./osrm:/data
+    command: "osrm-routed --max-matching-size 1000 --max-table-size 1000 --max-viaroute-size 1000 --algorithm mld /data/Hong-Kong.osrm"
+
+networks:
+  springapimysql-net:

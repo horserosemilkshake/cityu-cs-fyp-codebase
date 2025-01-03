@@ -1,0 +1,162 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > PackageAlteringMapper</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.mapper</a>
+</div>
+
+<h1>Coverage Summary for Class: PackageAlteringMapper (org.cityu.lmsbackend.mapper)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+</tr>
+<tr>
+  <td class="name">PackageAlteringMapper</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.mapper;
+&nbsp;
+&nbsp;import org.apache.ibatis.annotations.Insert;
+&nbsp;import org.apache.ibatis.annotations.Mapper;
+&nbsp;import org.apache.ibatis.annotations.Update;
+&nbsp;import org.cityu.lmsbackend.model.P2PPackage;
+&nbsp;import org.cityu.lmsbackend.model.W2PPackage;
+&nbsp;
+&nbsp;@Mapper
+&nbsp;public interface PackageAlteringMapper {
+&nbsp;    @Insert(&quot;INSERT INTO p2p_package \n&quot; +
+&nbsp;            &quot;(&quot; +
+&nbsp;            &quot;`package_id`,\n&quot; +
+&nbsp;            &quot;`package_description`,\n&quot; +
+&nbsp;            &quot;`package_weight_in_kg`,\n&quot; +
+&nbsp;            &quot;`package_height`,\n&quot; +
+&nbsp;            &quot;`package_length`,\n&quot; +
+&nbsp;            &quot;`package_width`,\n&quot; +
+&nbsp;            &quot;`package_sender_name`,\n&quot; +
+&nbsp;            &quot;`package_recipient_name`,\n&quot; +
+&nbsp;            &quot;`package_pickup_location`,\n&quot; +
+&nbsp;            &quot;`package_pickup_coordinate`,\n&quot; +
+&nbsp;            &quot;`package_destination`,\n&quot; +
+&nbsp;            &quot;`package_destination_coordinate`,\n&quot; +
+&nbsp;            &quot;`finished`,\n&quot; +
+&nbsp;            &quot;`responsible_driver_name`,\n&quot; +
+&nbsp;            &quot;`time`)\n&quot; +
+&nbsp;            &quot;VALUES\n&quot; +
+&nbsp;            &quot;(&quot; +
+&nbsp;            &quot;#{package_id},\n&quot; +
+&nbsp;
+&nbsp;            &quot;#{package_description},\n&quot; +
+&nbsp;            &quot;#{package_weight_in_kg},\n&quot; +
+&nbsp;            &quot;#{package_height},\n&quot; +
+&nbsp;            &quot;#{package_length},\n&quot; +
+&nbsp;            &quot;#{package_width},\n&quot; +
+&nbsp;            &quot;#{package_sender_name},\n&quot; +
+&nbsp;            &quot;#{package_recipient_name},\n&quot; +
+&nbsp;            &quot;#{package_pickup_location},\n&quot; +
+&nbsp;            &quot;#{package_pickup_coordinate},\n&quot; +
+&nbsp;            &quot;#{package_destination},\n&quot; +
+&nbsp;            &quot;#{package_destination_coordinate},\n&quot; +
+&nbsp;            &quot;#{finished},\n&quot; +
+&nbsp;            &quot;#{responsible_driver_name},&quot; +
+&nbsp;            &quot;#{time});\n&quot;)
+&nbsp;    public void insertP2PPackage(P2PPackage pPackage);
+&nbsp;
+&nbsp;    @Insert(&quot;INSERT INTO w2p_package \n&quot; +
+&nbsp;            &quot;(&quot; +
+&nbsp;            &quot;`package_id`,\n&quot; +
+&nbsp;            &quot;`package_description`,\n&quot; +
+&nbsp;            &quot;`package_weight_in_kg`,\n&quot; +
+&nbsp;            &quot;`package_height`,\n&quot; +
+&nbsp;            &quot;`package_length`,\n&quot; +
+&nbsp;            &quot;`package_width`,\n&quot; +
+&nbsp;            &quot;`package_recipient_name`,\n&quot; +
+&nbsp;            &quot;`package_pickup_location`,\n&quot; +
+&nbsp;            &quot;`package_pickup_coordinate`,\n&quot; +
+&nbsp;            &quot;`package_destination`,\n&quot; +
+&nbsp;            &quot;`package_destination_coordinate`,\n&quot; +
+&nbsp;            &quot;`finished`,\n&quot; +
+&nbsp;            &quot;`responsible_driver_name`)\n&quot; +
+&nbsp;            &quot;`time`,\n&quot; +
+&nbsp;            &quot;VALUES\n&quot; +
+&nbsp;            &quot;(&quot; +
+&nbsp;            &quot;#{package_id},\n&quot; +
+&nbsp;            &quot;#{time},\n&quot; +
+&nbsp;            &quot;#{package_description},\n&quot; +
+&nbsp;            &quot;#{package_weight_in_kg},\n&quot; +
+&nbsp;            &quot;#{package_height},\n&quot; +
+&nbsp;            &quot;#{package_length},\n&quot; +
+&nbsp;            &quot;#{package_width},\n&quot; +
+&nbsp;            &quot;#{package_recipient_name},\n&quot; +
+&nbsp;            &quot;#{package_pickup_location},\n&quot; +
+&nbsp;            &quot;#{package_pickup_coordinate},\n&quot; +
+&nbsp;            &quot;#{package_destination},\n&quot; +
+&nbsp;            &quot;#{package_destination_coordinate},\n&quot; +
+&nbsp;            &quot;#{finished},\n&quot; +
+&nbsp;            &quot;#{responsible_driver_name}&quot; +
+&nbsp;            &quot;#{time});\n&quot;)
+&nbsp;    public void insertW2PPackage(W2PPackage pPackage);
+&nbsp;    
+&nbsp;    @Update(&quot;UPDATE p2p_package SET `responsible_driver_name` = #{delivererName} WHERE (`package_id` = #{packageId});&quot;)
+&nbsp;    public void updateP2PPackageResponsibleDeliverer(String packageId, String delivererName);
+&nbsp;    
+&nbsp;    @Update(&quot;UPDATE w2p_package SET `responsible_driver_name` = #{delivererName} WHERE (`package_id` = #{packageId});&quot;)
+&nbsp;    public void updateW2PPackageResponsibleDeliverer(String packageId, String delivererName);
+&nbsp;    
+&nbsp;    @Update(&quot;UPDATE p2p_package SET `finished` = &#39;1&#39; WHERE (`package_id` = #{packageId});&quot;)
+&nbsp;    public void updateP2PPackageCompleteSuccessfullyy(String packageId, String delivererName);
+&nbsp;    
+&nbsp;    @Update(&quot;UPDATE w2p_package SET `finished` = &#39;1&#39; WHERE (`package_id` = #{packageId});&quot;)
+&nbsp;    public void updateW2PPackageCompleteSuccessfullyy(String packageId, String delivererName);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>

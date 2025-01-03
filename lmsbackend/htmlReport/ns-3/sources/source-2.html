@@ -1,0 +1,185 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=x-windows-950"> 
+  <title>Coverage Report > AuthController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.cityu.lmsbackend.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: AuthController (org.cityu.lmsbackend.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">AuthController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/10)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (22/22)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.cityu.lmsbackend.controller;
+&nbsp;
+&nbsp;import cn.dev33.satoken.session.SaSession;
+&nbsp;import cn.dev33.satoken.session.TokenSign;
+&nbsp;import org.cityu.lmsbackend.service.LoginService;
+&nbsp;import org.cityu.lmsbackend.utils.LoginRequestData;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.web.bind.annotation.*;
+&nbsp;
+&nbsp;import cn.dev33.satoken.stp.StpUtil;
+&nbsp;import cn.dev33.satoken.util.SaResult;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@RestController
+&nbsp;@CrossOrigin
+&nbsp;@RequestMapping(&quot;/api/v1/auth/&quot;)
+<b class="fc">&nbsp;public class AuthController {</b>
+&nbsp;    @Autowired
+&nbsp;    private LoginService loginService;
+&nbsp;
+&nbsp;    @PostMapping(&quot;login&quot;)
+&nbsp;    public SaResult parseLogin(@RequestBody LoginRequestData requestData){
+<b class="fc">&nbsp;    	String username = requestData.getUsername();</b>
+<b class="fc">&nbsp;        String password = requestData.getPassword();</b>
+<b class="fc">&nbsp;        String role = requestData.getRole();</b>
+<b class="fc">&nbsp;        return performLogin(username, password, role);</b>
+&nbsp;    }
+&nbsp;    
+&nbsp;    public SaResult performLogin(String userName,
+&nbsp;                                 String passWord,
+&nbsp;                                 String roleString){
+<b class="fc">&nbsp;    	System.out.println(userName);</b>
+<b class="fc">&nbsp;    	System.out.println(passWord);</b>
+<b class="fc">&nbsp;    	System.out.println(roleString);</b>
+<b class="fc">&nbsp;        return loginService.performLogin(userName, passWord, roleString);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;logged-in&quot;)
+&nbsp;    public SaResult isLogin() {
+<b class="fc">&nbsp;        return loginService.isLogin();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;token-info&quot;)
+&nbsp;    public SaResult tokenInfo() {
+<b class="fc">&nbsp;        return loginService.tokenInfo();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;session-info&quot;)
+&nbsp;    public SaSession sessionInfo() {
+<b class="fc">&nbsp;        return loginService.getSessionInfo();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    @GetMapping(&quot;get-all-sessions&quot;)
+&nbsp;    public List&lt;String&gt; getAllSessions() {
+<b class="fc">&nbsp;        List&lt;String&gt; sessionIdList = StpUtil.searchSessionId(&quot;&quot;, 0, -1, false);</b>
+&nbsp;
+<b class="fc">&nbsp;        for (String sessionId : sessionIdList) {</b>
+<b class="fc">&nbsp;            SaSession session = StpUtil.getSessionBySessionId(sessionId);</b>
+<b class="fc">&nbsp;            List&lt;TokenSign&gt; tokenSignList = session.getTokenSignList();</b>
+<b class="fc">&nbsp;            System.out.println(&quot;Session id: &quot; + sessionId + &quot;, is currently on &quot; + tokenSignList.size() + &quot; devices&quot;);</b>
+<b class="fc">&nbsp;        }</b>
+<b class="fc">&nbsp;        return sessionIdList;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;get-roles&quot;)
+&nbsp;    public List&lt;String&gt; getRoles() {
+<b class="fc">&nbsp;        return loginService.getRoles();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @GetMapping(&quot;get-permissions&quot;)
+&nbsp;    public List&lt;String&gt; getPermissions() {
+<b class="fc">&nbsp;        return loginService.getPermissions();</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    @DeleteMapping(&quot;logout&quot;)
+&nbsp;    public SaResult logout() {
+<b class="fc">&nbsp;        return loginService.logout();</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2024-04-27 17:48</div>
+</div>
+</body>
+</html>
