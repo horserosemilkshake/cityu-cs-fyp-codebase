@@ -109,7 +109,7 @@ function toRadians(degrees: number): number {
 }
 
 export async function getWalletBalance(wallet_address: string, dp: number): Promise<number> {
-    const web3 = new Web3(new HttpProvider('https://go.getblock.io/58334e125b504020bfa7c5224549a0f7'));
+    const web3 = new Web3(new HttpProvider('https://go.getblock.io/'));
     console.log(await web3.eth.getBlockNumber());
 
     const tokenContract = "0x0000000000000000000000000000000000001010";
@@ -142,7 +142,7 @@ export async function webRequest(url: string, m: string, stringifiedJson: BodyIn
 export async function payment(payer_cryptowallet_address: string, payer_cryptowallet_key: string, receiver_username: string, receiver_role: string, value: string): Promise<string> {
     const toAddress = await webRequest(baseURL + "/api/v1/auth/address", "POST", JSON.stringify({ username: receiver_username, password: "", role: receiver_role }));
 
-    const web3 = new Web3(new HttpProvider('https://go.getblock.io/58334e125b504020bfa7c5224549a0f7'));
+    const web3 = new Web3(new HttpProvider('https://go.getblock.io/'));
     console.log(await web3.eth.getBlockNumber());
 
     const tokenContract = "0x0000000000000000000000000000000000001010";
@@ -222,5 +222,4 @@ export const baseURL = "http://" + serverDomain + ":8080";
 export const routingURL = "http://" + serverDomain + ":5000";
 export const externalServiceURL = "http://" + serverDomain + ":1234"
 
-export const GOOGLE_MAPS_API_KEY = "AIzaSyA7F13zRkSzRiNPlt6zbmM5YrgipqPA8Ks"; //Phony key
-//AIzaSyBzwogTwDIuG3rAuzrqvJkIhcBk5LvlwKA
+export const GOOGLE_MAPS_API_KEY = ""; //Phony key
